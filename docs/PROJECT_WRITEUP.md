@@ -99,24 +99,4 @@ The tool is organized around the two things a partner actually uploads:
   frontend, Docker Compose wiring both) — 0 required external services;
   the entire demo runs fully offline against its own fixtures
 
-## Resume-ready impact bullets
 
-- Architected a self-service media ingestion validator in Python/FastAPI
-  that automates compliance checks — localized titles, EPG schedules,
-  licensing windows, HLS/DASH rendition ladders — across 51 validation
-  rules, replacing manual partner-feed review with instant, line-level
-  structured error reports.
-- Built an async HTTP segment-probing pipeline (`httpx` + `m3u8`/`lxml`)
-  that concurrently verifies required video bitrates, audio tracks, and
-  live segment availability across HLS and DASH manifests, surfacing broken
-  renditions (e.g. "Missing 1080p rendition") before partner content reaches
-  go-live.
-- Engineered a React/TypeScript partner dashboard that turns raw validation
-  output into an actionable pass/fail report with per-field error locators
-  and source line numbers, cutting the loop between "partner submits" and
-  "partner knows exactly what to fix" from a manual review cycle to
-  sub-second, self-service feedback.
-- Containerized the full stack (Docker + Docker Compose) with an
-  in-process, network-free test suite (pytest + ASGI transport, 22 tests)
-  that exercises real HTTP 404-detection logic without a live server,
-  ensuring the ingestion pipeline is verifiably correct pre-deployment.
