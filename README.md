@@ -95,3 +95,8 @@ backend/
 | **Containerization** | Docker + Docker Compose | Two independently deployable services (API, dashboard) that a real partner-integrations team would run and version separately; Compose wires them into one command for local/demo use. |
 | **Testing** | pytest + pytest-asyncio, in-process ASGI transport | Manifest validation makes real HTTP calls (to probe segments) — instead of mocking that away, tests route those calls through `httpx.ASGITransport` back into the same FastAPI app in-process, so the 404-detection path is exercised for real, with zero live server and zero network flakiness. |
 
+See [`docs/PROJECT_WRITEUP.md`](docs/PROJECT_WRITEUP.md) for the full build
+story — architecture and validation-flow diagrams, real bugs found and fixed,
+results from testing against live public HLS/DASH streams, and verified
+metrics.
+
