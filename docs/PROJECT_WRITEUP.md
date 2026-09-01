@@ -1,27 +1,27 @@
 # Building the Media Partner Ingestion Validator
 
 *A record of how it happened, start to finish — a working simulation of the
-pre-flight tooling a YouTube TV Partner Engineer runs before a channel's
-content goes live.*
+pre-flight tooling a media platform's partner engineering team runs before a
+channel's content goes live.*
 
 ---
 
 ## Why I built this
 
-I was looking at YouTube's **TV Partner Engineer** role. The posting is
-specific about what the job actually is: *"improve operations by developing
-automation scripts and dashboards,"* *"guarantee the technical aspects of a
-partner's integration... by providing necessary documentation and technical
-guidance,"* and *"providing product input for partner self-service tools and
-applications."* Preferred qualifications call out XML/HTML troubleshooting
-and running scripts in Python specifically.
+Media platforms that carry third-party TV/sports content have to onboard
+partners who each submit schedule metadata and video manifests in slightly
+different states of correctness. That check is usually done by a person,
+by hand — reading an XML feed, pinging manifest URLs one at a time, then
+emailing the partner back with what's wrong. It doesn't scale past a
+handful of partners, and it makes every partner's first submission a slow,
+back-and-forth process instead of a fast, self-service one.
 
-Rather than just list those phrases on a resume, I wanted to build the actual
-thing the job describes — a self-service tool a media/TV partner would use to
-check their submission before an operations team ever has to look at it by
-hand. Real sports-broadcast partner scenarios (an F1 race replay, a football
-match highlights package) stood in for the kind of content this would
-actually gate.
+I wanted to build the self-service tool that removes most of that manual
+work — something a media/TV partner could run their own submission through
+before an operations team ever has to look at it by hand. Real
+sports-broadcast partner scenarios (an F1 race replay, a football match
+highlights package) stood in for the kind of content this would actually
+gate.
 
 ## What a partner submission has to get right
 
@@ -322,10 +322,10 @@ Verified directly against this repository, not estimated:
 
 ## What it actually is, in the end
 
-A working, tested simulation of the specific self-service tooling a TV
-Partner Engineer role describes building: two real parsers, real HTTP
-verification instead of simulated pass/fail, a dashboard that reports
-exactly what's wrong instead of just whether something's wrong, and a test
-suite honest enough to have caught its own fixture going stale mid-writeup.
+A working, tested simulation of real partner-onboarding pre-flight tooling:
+two real parsers, real HTTP verification instead of simulated pass/fail, a
+dashboard that reports exactly what's wrong instead of just whether
+something's wrong, and a test suite honest enough to have caught its own
+fixture going stale mid-writeup.
 
 **Repo:** [github.com/aditeya08varma/tv-partner-ingestion-validator](https://github.com/aditeya08varma/tv-partner-ingestion-validator)
