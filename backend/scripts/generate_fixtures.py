@@ -5,11 +5,21 @@ Re-run after editing this file to regenerate the fixture tree from scratch.
 from __future__ import annotations
 
 import shutil
+from datetime import datetime, timedelta, timezone
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent / "app" / "mock_data"
 FEEDS = ROOT / "feeds"
 MANIFESTS = ROOT / "manifests"
+
+# Licensing/EPG dates in the fixtures are computed relative to generation
+# time (not hardcoded) so a "valid" fixture doesn't silently become "expired"
+# months after this script was last run.
+NOW = datetime.now(timezone.utc)
+
+
+def iso(dt: datetime) -> str:
+    return dt.strftime("%Y-%m-%dT%H:%M:%SZ")
 
 SEGMENT_BYTES = b"\x47" + b"\x00" * 187  # one dummy MPEG-TS packet, repeated
 
@@ -32,7 +42,7 @@ def reset(path: Path) -> None:
 # Metadata feeds (MRSS + JSON), F1 replay + football highlights, valid/broken
 # ---------------------------------------------------------------------------
 
-MRSS_VALID = """<?xml version="1.0" encoding="UTF-8"?>
+MRSS_VALID = f"""<?xml version="1.0" encoding="UTF-8"?>
 <rss version="2.0"
      xmlns:media="http://search.yahoo.com/mrss/"
      xmlns:epg="https://schemas.example.com/partner-epg/1.0"
@@ -45,9 +55,9 @@ MRSS_VALID = """<?xml version="1.0" encoding="UTF-8"?>
       <media:title xml:lang="fr-FR">Formule 1 : Grand Prix de Monaco - Replay complet</media:title>
       <media:thumbnail url="https://cdn.apexsports.example.com/thumbs/f1-monaco-2026.jpg"/>
       <epg:schedule>
-        <epg:airing start="2026-05-24T13:00:00Z" end="2026-05-24T15:30:00Z"/>
+        <epg:airing start="{iso(NOW - timedelta(days=7))}" end="{iso(NOW - timedelta(days=7) + timedelta(hours=2, minutes=30))}"/>
       </epg:schedule>
-      <licensing:window start="2026-05-24T00:00:00Z" end="2026-08-24T00:00:00Z" territories="US,CA,GB"/>
+      <licensing:window start="{iso(NOW - timedelta(days=30))}" end="{iso(NOW + timedelta(days=90))}" territories="US,CA,GB"/>
       <category>Motorsport</category>
     </item>
   </channel>
@@ -73,28 +83,28 @@ MRSS_BROKEN = """<?xml version="1.0" encoding="UTF-8"?>
 </rss>
 """
 
-JSON_VALID = """{
+JSON_VALID = f"""{{
   "partner": "Riverside Football Network",
   "items": [
-    {
+    {{
       "content_id": "football-2026-cup-final-highlights",
-      "titles": {
+      "titles": {{
         "en-US": "Cup Final Highlights: Riverside vs Union City",
         "es-MX": "Resumen de la Final de Copa: Riverside vs Union City"
-      },
+      }},
       "thumbnail_url": "https://cdn.riversidefc.example.com/thumbs/cup-final-2026.jpg",
       "epg": [
-        {"start": "2026-06-14T18:00:00Z", "end": "2026-06-14T18:45:00Z"}
+        {{"start": "{iso(NOW - timedelta(days=3))}", "end": "{iso(NOW - timedelta(days=3) + timedelta(minutes=45))}"}}
       ],
-      "licensing_window": {
-        "start": "2026-06-14T00:00:00Z",
-        "end": "2026-09-14T00:00:00Z",
+      "licensing_window": {{
+        "start": "{iso(NOW - timedelta(days=14))}",
+        "end": "{iso(NOW + timedelta(days=90))}",
         "territories": ["US", "MX"]
-      },
+      }},
       "category": "Football"
-    }
+    }}
   ]
-}
+}}
 """
 
 JSON_BROKEN = """{
